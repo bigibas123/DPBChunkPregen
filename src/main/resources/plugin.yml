@@ -1,0 +1,29 @@
+name: ${project.name}
+version: ${project.version}
+description: The best plugin in the world
+# We could place every author in the authors list, but chose not to for illustrative purposes
+# Also, having an author distinguishes that person as the project lead, and ensures their
+# name is displayed first
+author: bigibas123
+authors: [bigibas123]
+
+main: ${main.class}
+database: false
+api-version: "1.15"
+
+commands:
+  pregen:
+    description: Pregenerates the world
+    aliases: [pregennowpls]
+    permission: dpb.pregen.use
+    usage: /pregen <world> <startx> <startz> <endx> <endz>
+    
+permissions:
+  dpb.pregen.*:
+    description: Gives access to all Inferno commands
+    default: op
+    children:
+      dpb.pregen.use: true
+  dpb.pregen.use:
+    description: Allows use of the pregen command
+    default: op
