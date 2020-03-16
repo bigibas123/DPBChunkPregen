@@ -45,14 +45,15 @@ public class PregenCommand extends DPBChunkPregenCommand {
                         IntStream.range(startChunkZ, endChunkZ).filter(value -> value % 10 == 0).forEach(z -> {
                             sender.sendMessage("Scheduling:" + x + "," + z);
                             scheduler.runTaskAsynchronously(this.getPlugin(), () -> {
+
                                 for (int x1 = x; x + 10 > x1; x1++) {
                                     for (int z1 = z; z + 10 > z1; z1++) {
-                                        if (!PaperLib.isChunkGenerated(w, x, z)) {
-                                            PaperLib.getChunkAtAsync(w, x, z).join();
+                                        if (!PaperLib.isChunkGenerated(w, x1, z1)) {
+                                            PaperLib.getChunkAtAsync(w, x1, z1).join();
                                         }
                                     }
                                 }
-                                scheduler.runTask(this.getPlugin(),() -> sender.sendMessage("Done generating:" + x + "," + z));
+                                scheduler.runTask(this.getPlugin(), () -> sender.sendMessage("Done generating:" + x + "," + z));
 
                             });
                         }));
