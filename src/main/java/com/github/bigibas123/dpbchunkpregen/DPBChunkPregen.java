@@ -9,9 +9,12 @@ public class DPBChunkPregen extends JavaPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
+        Config.init(getConfig());
         PregenCommand cmd = new PregenCommand(this);
         this.registerCommand(cmd);
         PaperLib.suggestPaper(this);
+        Config.save(getConfig());
+        saveConfig();
     }
 
     private void registerCommand(DPBChunkPregenCommand cmd) {
@@ -25,6 +28,8 @@ public class DPBChunkPregen extends JavaPlugin {
     @Override
     public void onDisable() {
         super.onDisable();
+        Config.save(getConfig());
+        saveConfig();
     }
 
 

@@ -1,6 +1,5 @@
 package com.github.bigibas123.dpbchunkpregen;
 
-import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -9,7 +8,6 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class PregenCommand extends DPBChunkPregenCommand {
 
@@ -41,22 +39,11 @@ public class PregenCommand extends DPBChunkPregenCommand {
                 int startChunkZ = arg1 / 16;
                 int endChunkX = arg2 / 16;
                 int endChunkZ = arg3 / 16;
-                IntStream.range(startChunkX, endChunkX).filter(value -> value % 10 == 0).forEach(x ->
-                        IntStream.range(startChunkZ, endChunkZ).filter(value -> value % 10 == 0).forEach(z -> {
-                            sender.sendMessage("Scheduling:" + x + "," + z);
-                            scheduler.runTaskAsynchronously(this.getPlugin(), () -> {
 
-                                for (int x1 = x; x + 10 > x1; x1++) {
-                                    for (int z1 = z; z + 10 > z1; z1++) {
-                                        if (!PaperLib.isChunkGenerated(w, x1, z1)) {
-                                            PaperLib.getChunkAtAsync(w, x1, z1).join();
-                                        }
-                                    }
-                                }
-                                scheduler.runTask(this.getPlugin(), () -> sender.sendMessage("Done generating:" + x + "," + z));
 
-                            });
-                        }));
+                GenRunner runner = new GenRunner(this, w, startChunkX, startChunkZ, endChunkX, endChunkZ, scheduler, sender);
+
+
                 return true;
             } catch (NumberFormatException e) {
                 sender.sendMessage("one of the numbers is wrong");
@@ -77,5 +64,6 @@ public class PregenCommand extends DPBChunkPregenCommand {
         }
         return suggestions;
     }
+
 
 }
