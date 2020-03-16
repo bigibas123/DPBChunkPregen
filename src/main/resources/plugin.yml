@@ -9,7 +9,7 @@ authors: [bigibas123]
 
 main: ${main.class}
 database: false
-api-version: "1.15"
+api-version: "${spigot-api.major.version}"
 
 commands:
   pregen:
@@ -20,7 +20,7 @@ commands:
     
 permissions:
   dpb.pregen.*:
-    description: Gives access to all Inferno commands
+    description: Allows use of all pregen functions
     default: op
     children:
       dpb.pregen.use: true

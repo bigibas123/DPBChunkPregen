@@ -6,10 +6,13 @@
 
     <groupId>com.github.bigibas123</groupId>
     <artifactId>dpbchunkpregen</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>${minecraft.version}-1.2-SNAPSHOT</version>
 
     <properties>
         <main.class>com.github.bigibas123.dpbchunkpregen.DPBChunkPregen</main.class>
+        <spigot-api.major.version>1.15</spigot-api.major.version>
+        <minecraft.version>${spigot-api.major.version}.2</minecraft.version>
+        <spigot-api.minor.version>${minecraft.version}-R0.1-SNAPSHOT</spigot-api.minor.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -28,46 +31,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.papermc</groupId>
-            <artifactId>paperlib</artifactId>
-            <version>1.0.2</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.15.2-R0.1-SNAPSHOT</version>
+            <version>${spigot-api.minor.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.1</version>
-                <configuration>
-                    <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml
-                    </dependencyReducedPomLocation>
-                    <relocations>
-                        <relocation>
-                            <pattern>io.papermc.lib</pattern>
-                            <shadedPattern>${project.groupId}.${project.artifactId}.paperlib
-                            </shadedPattern> <!-- Replace this -->
-                        </relocation>
-                    </relocations>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

@@ -32,13 +32,13 @@ class GenRunner {
         world = w;
         this.scheduler = scheduler;
         this.sender = sender;
-        this.fillQueue(startChunkX, startChunkZ, endChunkX, endChunkZ);
+        this.queue = new LinkedBlockingQueue<>();
+        this.addToQueue(startChunkX, startChunkZ, endChunkX, endChunkZ);
         sender.sendMessage("Starting generation with: "+queue.size()+" chunks");
         this.scheduler.runTaskAsynchronously(pregenCommand.getPlugin(), task);
     }
 
-    private void fillQueue(int startChunkX, int startChunkZ, int endChunkX, int endChunkZ) {
-        this.queue = new LinkedBlockingQueue<>();
+    private void addToQueue(int startChunkX, int startChunkZ, int endChunkX, int endChunkZ) {
         IntStream.range(startChunkX, endChunkX)
                 .forEach(x ->
                         IntStream.range(startChunkZ, endChunkZ)
@@ -99,9 +99,7 @@ class GenRunner {
         }
 
         public CompletableFuture<Chunk> gen(World w) {
-            return w.getChunkAtAsync(x, z).whenComplete((chunk, throwable) -> {
-                chunk.unload();
-            });
+            return w.getChunkAtAsync(x, z).whenComplete((chunk, throwable) -> chunk.unload());
         }
 
     }
