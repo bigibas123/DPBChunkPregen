@@ -34,7 +34,7 @@ class GenRunner {
         this.sender = sender;
         this.queue = new LinkedBlockingQueue<>();
         this.addToQueue(startChunkX, startChunkZ, endChunkX, endChunkZ);
-        sender.sendMessage("Starting generation with: "+queue.size()+" chunks");
+        sender.sendMessage("Starting generation with: " + queue.size() + " chunks");
         this.scheduler.runTaskAsynchronously(pregenCommand.getPlugin(), task);
     }
 
@@ -53,39 +53,50 @@ class GenRunner {
     }
 
     private void accept(BukkitTask bukkitTask) {
-        while (!queue.isEmpty()) {
-            if (Bukkit.getTPS()[0] > Reference.minTPS) {
-                LinkedList<CompletableFuture<Chunk>> list = new LinkedList<>();
-                       {
-                            IntStream.range(0, Reference.blockSize)
-                                    .forEach(ignored -> {
-                                                ChunkPos c;
-                                                if ((c = queue.poll()) != null) {
-                                                    if(!c.isGenerated(world)) {
-                                                        list.add(c.gen(world));
-                                                    }
-                                                }
-                                            }
-                                    );
-                       }
-                       for(CompletableFuture<Chunk> cf:list){
-                           if(!cf.isDone()){
-                               cf.join();
-                           }
-                       }
-                       counter++;
-            } else {
-                sender.sendMessage("Waiting for server to calm down");
-            }
-            if(counter>= Reference.reportMuliplier){
-                counter = 0;
-                sender.sendMessage("Generated another: "+Reference.blockSize*Reference.reportMuliplier);
-            }
+        if (Bukkit.getTPS()[0] < Reference.minTPS) {
+            sender.sendMessage("Tps is " + Bukkit.getTPS()[0] + " waiting for it to be below " + Reference.minTPS);
             try {
-                scheduler.runTaskLaterAsynchronously(pregenCommand.getPlugin(), task, Reference.runEvery);
-            }catch (IllegalPluginAccessException e){
-                break;
+                scheduler.runTaskLaterAsynchronously(pregenCommand.getPlugin(), task, 200);
+            } catch (IllegalPluginAccessException e) {
+                bukkitTask.cancel();
             }
+            return;
+        } else if (((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / Runtime.getRuntime().totalMemory()) * 100 > Reference.maxMemUsage) {
+            sender.sendMessage("Memory usage is: " +
+                    (((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / Runtime.getRuntime().totalMemory()) * 100) +
+                    "% waiting for more to be freed");
+        } else {
+            LinkedList<CompletableFuture<Chunk>> list = new LinkedList<>();
+            {
+                IntStream.range(0, Reference.blockSize)
+                        .forEach(ignored -> {
+                                    ChunkPos c;
+                                    if ((c = queue.poll()) != null) {
+                                        if (!c.isGenerated(world)) {
+                                            list.add(c.gen(world));
+                                        }
+                                    }
+                                }
+                        );
+            }
+            for (CompletableFuture<Chunk> cf: list) {
+                if (!cf.isDone()) {
+                    cf.join();
+                }
+            }
+            counter++;
+        }
+        if (counter >= Reference.reportMuliplier) {
+            counter = 0;
+            sender.sendMessage("Generated another: " + Reference.blockSize * Reference.reportMuliplier);
+        }
+        try {
+            if (queue.size() > 0) {
+                scheduler.runTaskLaterAsynchronously(pregenCommand.getPlugin(), task, Reference.runEvery);
+                return;
+            }
+        } catch (IllegalPluginAccessException e) {
+            bukkitTask.cancel();
         }
         sender.sendMessage("Generating done/stopped");
     }
@@ -105,7 +116,7 @@ class GenRunner {
         }
 
         public boolean isGenerated(World w) {
-            return w.isChunkGenerated(x,z);
+            return w.isChunkGenerated(x, z);
         }
 
     }

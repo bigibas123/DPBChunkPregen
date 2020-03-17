@@ -8,4 +8,16 @@ public class Reference {
 
         public static int reportMuliplier = 10;
 
+        public static int maxMemUsage = 90;
+
+        public static String string() {
+                return "Reference{" +
+                        "blockSize=" + blockSize +
+                        ", minTPS=" + minTPS +
+                        ", runEvery=" + runEvery +
+                        ", reportMuliplier=" + reportMuliplier +
+                        ", maxMemUsage=" + maxMemUsage +
+                        '}';
+        }
+
 }

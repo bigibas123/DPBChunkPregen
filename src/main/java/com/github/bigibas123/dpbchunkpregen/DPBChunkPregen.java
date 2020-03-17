@@ -8,9 +8,12 @@ public class DPBChunkPregen extends JavaPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
-        Config.init(getConfig());
+        Config.load(getConfig());
         PregenCommand cmd = new PregenCommand(this);
         this.registerCommand(cmd);
+        Config.save(getConfig());
+        saveConfig();
+
     }
 
     private void registerCommand(DPBChunkPregenCommand cmd) {

@@ -1,6 +1,7 @@
 package com.github.bigibas123.dpbchunkpregen;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,7 +18,18 @@ public class PregenCommand extends DPBChunkPregenCommand {
 
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length < 5) {
+        if (args.length == 1) {
+            String subcmd = args[0];
+            if (subcmd.equalsIgnoreCase("reload")) {
+                getPlugin().reloadConfig();
+                Config.load(getPlugin().getConfig());
+                sender.sendMessage("Config reloaded");
+                sender.sendMessage(Reference.string());
+            }else{
+                sender.sendMessage(ChatColor.RED+"Unknown subcommand, either use reload or <world> <startx> <startz> <endx> <endz>");
+            }
+            return true;
+        } else if (args.length < 5) {
             return false;
         } else {
 
@@ -61,6 +73,9 @@ public class PregenCommand extends DPBChunkPregenCommand {
                     suggestions.add(world.getName());
                 }
             });
+            if ("reload".startsWith(args[0])) {
+                suggestions.add("reload");
+            }
         }
         return suggestions;
     }
