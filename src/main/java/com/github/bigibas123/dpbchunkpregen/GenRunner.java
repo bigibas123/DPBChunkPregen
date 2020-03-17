@@ -61,7 +61,9 @@ class GenRunner {
                                     .forEach(ignored -> {
                                                 ChunkPos c;
                                                 if ((c = queue.poll()) != null) {
-                                                    list.add(c.gen(world));
+                                                    if(!c.isGenerated(world)) {
+                                                        list.add(c.gen(world));
+                                                    }
                                                 }
                                             }
                                     );
@@ -100,6 +102,10 @@ class GenRunner {
 
         public CompletableFuture<Chunk> gen(World w) {
             return w.getChunkAtAsync(x, z).whenComplete((chunk, throwable) -> chunk.unload());
+        }
+
+        public boolean isGenerated(World w) {
+            return w.isChunkGenerated(x,z);
         }
 
     }
