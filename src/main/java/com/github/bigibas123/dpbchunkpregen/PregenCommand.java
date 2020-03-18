@@ -27,9 +27,19 @@ public class PregenCommand extends DPBChunkPregenCommand {
                 Config.load(getPlugin().getConfig());
                 Logger.info(Reference.string());
                 break;
+
             case "status":
                 Logger.info(DPBChunkPregen.runner.getStatus() + " with " + DPBChunkPregen.runner.workerSize() + " workers generating " + DPBChunkPregen.runner.queueSize() + " chunks");
                 break;
+
+            case "pause":
+                DPBChunkPregen.runner.pause();
+                break;
+
+            case "resume":
+                DPBChunkPregen.runner.resume();
+                break;
+
             case "square":
                 String world = args[1];
                 int arg0 = Integer.parseInt(args[2]);
@@ -48,6 +58,7 @@ public class PregenCommand extends DPBChunkPregenCommand {
                 int endChunkZ = arg3 / 16;
                 DPBChunkPregen.runner.addToQueue(w, startChunkX, startChunkZ, endChunkX, endChunkZ);
                 break;
+
             default:
                 printHelp(sender);
                 break;
@@ -57,9 +68,11 @@ public class PregenCommand extends DPBChunkPregenCommand {
 
     private void printHelp(CommandSender sender) {
         sender.sendMessage(ChatColor.YELLOW + "===PREGEN COMMAND HELP===");
-        sender.sendMessage("/pregen reload");
         sender.sendMessage("/pregen square <world> <startX> <startZ> <endX> <endZ>");
+        sender.sendMessage("/pregen reload");
         sender.sendMessage("/pregen status");
+        sender.sendMessage("/pregen pause");
+        sender.sendMessage("/pregen resume");
     }
 
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -72,6 +85,12 @@ public class PregenCommand extends DPBChunkPregenCommand {
                 suggestions.add("square");
             }
             if ("status".startsWith(args[0])) {
+                suggestions.add("status");
+            }
+            if ("pause".startsWith(args[0])) {
+                suggestions.add("status");
+            }
+            if ("resume".startsWith(args[0])) {
                 suggestions.add("status");
             }
         } else if (args.length > 1 && "square".equalsIgnoreCase(args[0])) {

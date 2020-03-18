@@ -194,6 +194,7 @@ class GenRunner {
     public void pause() {
         if (this.status != Status.USER_PAUSED) {
             this.status = Status.USER_PAUSED;
+            Logger.info("Paused runner");
             this.statusUpdated = true;
         } else {
             Logger.warn("Tried to pause but runner was already paused");
@@ -203,10 +204,12 @@ class GenRunner {
     public void resume() {
         if (this.status == Status.USER_PAUSED) {
             this.status = Status.RUNNING;
+            Logger.info("Paused runner");
             this.statusUpdated = true;
             reSchedule(0);
         } else {
             Logger.warn("Tried to resume runners but was already running!");
+            Logger.debug("Current status: " + this.getStatus());
         }
     }
 
