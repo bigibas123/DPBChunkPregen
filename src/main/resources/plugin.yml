@@ -16,7 +16,7 @@ commands:
     description: Pregenerates the world
     aliases: [pregennowpls]
     permission: dpb.pregen.use
-    usage: /pregen <world> <startx> <startz> <endx> <endz>
+    usage: /pregen square <world> <startx> <startz> <endx> <endz>
     
 permissions:
   dpb.pregen.*:

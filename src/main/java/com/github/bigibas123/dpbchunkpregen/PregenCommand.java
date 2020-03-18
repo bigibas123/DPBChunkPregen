@@ -5,7 +5,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,29 +17,25 @@ public class PregenCommand extends DPBChunkPregenCommand {
 
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 1) {
-            String subcmd = args[0];
-            if (subcmd.equalsIgnoreCase("reload")) {
+        if (args.length < 1) {
+            printHelp(sender);
+            return true;
+        }
+        switch (args[0].toLowerCase()) {
+            case "reload":
                 getPlugin().reloadConfig();
                 Config.load(getPlugin().getConfig());
-                sender.sendMessage("Config reloaded");
-                sender.sendMessage(Reference.string());
-            }else{
-                sender.sendMessage(ChatColor.RED+"Unknown subcommand, either use reload or <world> <startx> <startz> <endx> <endz>");
-            }
-            return true;
-        } else if (args.length < 5) {
-            return false;
-        } else {
-
-            try {
-                BukkitScheduler scheduler = Bukkit.getScheduler();
-
-                String world = args[0];
-                int arg0 = Integer.parseInt(args[1]);
-                int arg1 = Integer.parseInt(args[2]);
-                int arg2 = Integer.parseInt(args[3]);
-                int arg3 = Integer.parseInt(args[4]);
+                Logger.info(Reference.string());
+                break;
+            case "status":
+                Logger.info(DPBChunkPregen.runner.getStatus() + " with " + DPBChunkPregen.runner.workerSize() + " workers generating " + DPBChunkPregen.runner.queueSize() + " chunks");
+                break;
+            case "square":
+                String world = args[1];
+                int arg0 = Integer.parseInt(args[2]);
+                int arg1 = Integer.parseInt(args[3]);
+                int arg2 = Integer.parseInt(args[4]);
+                int arg3 = Integer.parseInt(args[5]);
                 World w = Bukkit.getWorld(world);
 
                 if (w == null) {
@@ -51,31 +46,40 @@ public class PregenCommand extends DPBChunkPregenCommand {
                 int startChunkZ = arg1 / 16;
                 int endChunkX = arg2 / 16;
                 int endChunkZ = arg3 / 16;
-
-
-                GenRunner runner = new GenRunner(this, w, startChunkX, startChunkZ, endChunkX, endChunkZ, scheduler, sender);
-
-
-                return true;
-            } catch (NumberFormatException e) {
-                sender.sendMessage("one of the numbers is wrong");
-                return false;
-            }
+                DPBChunkPregen.runner.addToQueue(w, startChunkX, startChunkZ, endChunkX, endChunkZ);
+                break;
+            default:
+                printHelp(sender);
+                break;
         }
+        return true;
+    }
 
+    private void printHelp(CommandSender sender) {
+        sender.sendMessage(ChatColor.YELLOW + "===PREGEN COMMAND HELP===");
+        sender.sendMessage("/pregen reload");
+        sender.sendMessage("/pregen square <world> <startX> <startZ> <endX> <endZ>");
+        sender.sendMessage("/pregen status");
     }
 
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         ArrayList<String> suggestions = new ArrayList<>();
         if (args.length == 1) {
+            if ("reload".startsWith(args[0])) {
+                suggestions.add("reload");
+            }
+            if ("square".startsWith(args[0])) {
+                suggestions.add("square");
+            }
+            if ("status".startsWith(args[0])) {
+                suggestions.add("status");
+            }
+        } else if (args.length > 1 && "square".equalsIgnoreCase(args[0])) {
             Bukkit.getWorlds().forEach(world -> {
                 if (world.getName().startsWith(args[0])) {
                     suggestions.add(world.getName());
                 }
             });
-            if ("reload".startsWith(args[0])) {
-                suggestions.add("reload");
-            }
         }
         return suggestions;
     }
