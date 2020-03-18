@@ -1,4 +1,4 @@
-package com.github.bigibas123.dpbchunkpregen;
+package com.github.bigibas123.chunkpregen;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,9 +9,9 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PregenCommand extends DPBChunkPregenCommand {
+public class PregenCommand extends ChunkPregenCommand {
 
-    public PregenCommand(DPBChunkPregen plugin) {
+    public PregenCommand(ChunkPregen plugin) {
         super(plugin, "pregen");
     }
 
@@ -29,15 +29,15 @@ public class PregenCommand extends DPBChunkPregenCommand {
                 break;
 
             case "status":
-                Logger.info(DPBChunkPregen.runner.getStatus() + " with " + DPBChunkPregen.runner.workerSize() + " workers generating " + DPBChunkPregen.runner.queueSize() + " chunks");
+                Logger.info(ChunkPregen.runner.getStatus() + " with " + ChunkPregen.runner.workerSize() + " workers generating " + ChunkPregen.runner.queueSize() + " chunks");
                 break;
 
             case "pause":
-                DPBChunkPregen.runner.pause();
+                ChunkPregen.runner.pause();
                 break;
 
             case "resume":
-                DPBChunkPregen.runner.resume();
+                ChunkPregen.runner.resume();
                 break;
 
             case "square":
@@ -56,7 +56,7 @@ public class PregenCommand extends DPBChunkPregenCommand {
                 int startChunkZ = arg1 / 16;
                 int endChunkX = arg2 / 16;
                 int endChunkZ = arg3 / 16;
-                DPBChunkPregen.runner.addToQueue(w, startChunkX, startChunkZ, endChunkX, endChunkZ);
+                ChunkPregen.runner.addToQueue(w, startChunkX, startChunkZ, endChunkX, endChunkZ);
                 break;
 
             default:

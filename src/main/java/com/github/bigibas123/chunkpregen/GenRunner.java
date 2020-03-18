@@ -1,4 +1,4 @@
-package com.github.bigibas123.dpbchunkpregen;
+package com.github.bigibas123.chunkpregen;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;

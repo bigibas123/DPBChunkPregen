@@ -5,11 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.bigibas123</groupId>
-    <artifactId>dpbchunkpregen</artifactId>
-    <version>${minecraft.version}-2.0-SNAPSHOT</version>
+    <artifactId>chunkpregen</artifactId>
+    <version>${minecraft.version}-2.1-SNAPSHOT</version>
+
+    <name>ChunkPregen</name>
 
     <properties>
-        <main.class>com.github.bigibas123.dpbchunkpregen.DPBChunkPregen</main.class>
+        <main.class>${project.groupId}.${project.artifactId}.${project.name}</main.class>
         <spigot-api.major.version>1.15</spigot-api.major.version>
         <minecraft.version>${spigot-api.major.version}.2</minecraft.version>
         <spigot-api.minor.version>${minecraft.version}-R0.1-SNAPSHOT</spigot-api.minor.version>

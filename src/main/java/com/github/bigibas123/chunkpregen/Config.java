@@ -1,4 +1,4 @@
-package com.github.bigibas123.dpbchunkpregen;
+package com.github.bigibas123.chunkpregen;
 
 import org.bukkit.configuration.file.FileConfiguration;
 

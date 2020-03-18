@@ -1,10 +1,10 @@
-package com.github.bigibas123.dpbchunkpregen;
+package com.github.bigibas123.chunkpregen;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class DPBChunkPregen extends JavaPlugin {
+public class ChunkPregen extends JavaPlugin {
 
     public static GenRunner runner;
 
@@ -27,7 +27,7 @@ public class DPBChunkPregen extends JavaPlugin {
         runner.start();
     }
 
-    private void registerCommand(DPBChunkPregenCommand cmd) {
+    private void registerCommand(ChunkPregenCommand cmd) {
         PluginCommand command = this.getCommand(cmd.name);
         assert command != null;
         command.setTabCompleter(cmd);
